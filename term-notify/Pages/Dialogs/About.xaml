@@ -1,0 +1,39 @@
+﻿<ContentDialog
+    x:Class="term_notify.Pages.Dialogs.About"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:term_notify.Pages.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="About"
+    PrimaryButtonText="OK"
+    IsSecondaryButtonEnabled="False">
+
+    <Grid>
+        <StackPanel>
+            <Image Source="/Assets/with-heart.png"
+                   HorizontalAlignment="Left"
+                   Width="50" Height="50" />
+            <HyperlinkButton>
+                <TextBlock Text="Setup your own term-notify" />
+            </HyperlinkButton>
+            <TextBlock TextWrapping="Wrap" Style="{StaticResource SubheaderTextBlockStyle}" >
+                I love toast notifications
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                term-notify is an app about notifications. It utilize the push notification services on windows.
+                Device installed term-notify can receive notifications from anywhere using a very simple api.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Style="{StaticResource SubheaderTextBlockStyle}" >
+                Notifications everywhere!
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                You can send customized notifications from anywhere to the devices installed term-notify.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                It is good for intergrating with custom services. ( I made it because of this ).
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</ContentDialog>

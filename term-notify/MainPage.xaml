@@ -7,11 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.Resources>
-        <SolidColorBrush x:Key="AccentBrush" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="SubtleBrush" Color="{ThemeResource SystemAccentColor}" />
-        <SolidColorBrush x:Key="BackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
-    </Page.Resources>
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -30,26 +25,35 @@
             <Button Grid.Column="1" Margin="5"
                     Padding="0">
                 <i:IconSettings Width="60" Height="60"
-                                AutoScale="True" Foreground="{StaticResource AccentBrush}" />
+                                AutoScale="True" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="New Notification channel" />
+                        <MenuFlyoutItem Text="New channel" Click="NewChannel" />
+                        <MenuFlyoutItem Text="Privacy?" Click="ShowPrivacy" />
+                        <MenuFlyoutItem Text="What is this app?" Click="ShowAbout" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
         </Grid>
         <ListView x:Name="ChannelsView"
-                  Grid.Row="1"
+                  Grid.Row="1" ItemsSource="{Binding Channels}"
                   Margin="15">
             <ListView.Resources>
                 <MenuFlyout x:Key="ChannelContext">
-                    <MenuFlyoutItem Text="Remove" />
+                    <MenuFlyoutItem Text="Copy curl" Click="CopyCurl" />
+                    <MenuFlyoutItem Text="Copy wget" Click="CopyWget" />
+                    <MenuFlyoutItem Text="Remove" Click="RemoveChannel" />
                 </MenuFlyout>
             </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock RightTapped="ShowChannelContext" FlyoutBase.AttachedFlyout="{StaticResource ChannelContext}"
-                               Text="{Binding}" Style="{StaticResource BodyTextBlockStyle}" />
+                    <StackPanel Margin="5" RightTapped="ShowChannelContext" FlyoutBase.AttachedFlyout="{StaticResource ChannelContext}">
+                        <TextBlock Text="{Binding uuid}" Style="{StaticResource BodyTextBlockStyle}" />
+                        <TextBlock Text="{Binding CmdCurl}" Style="{StaticResource BodyTextBlockStyle}"
+                                   TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <TextBlock Text="{Binding CmdWget}" Style="{StaticResource BodyTextBlockStyle}"
+                                   TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
