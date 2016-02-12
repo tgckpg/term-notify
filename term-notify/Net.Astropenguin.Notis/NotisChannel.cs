@@ -14,7 +14,7 @@ namespace Net.Astropenguin.Notis
         {
             get
             {
-                return "curl " + NotificationService.NOTIS_PROTO
+                return "curl " + Channel.Info.NOTIS_PROTO
                     + string.Format(
                         " --data \"id={0}&action=deliver&title={1}&message={2}\""
                         , uuid, Uri.EscapeDataString( "Hello world" )
@@ -27,7 +27,7 @@ namespace Net.Astropenguin.Notis
         {
             get
             {
-                return "wget -qO- " + NotificationService.NOTIS_PROTO
+                return "wget -qO- " + Channel.Info.NOTIS_PROTO
                     + string.Format(
                         " --post-data=\"id={0}&action=deliver&title={1}&message={2}\""
                         , uuid, Uri.EscapeDataString( "Hello world" )

@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.PushNotifications;
 using Windows.UI.Notifications;
@@ -23,8 +24,6 @@ namespace Net.Astropenguin.Notis
 
         private XRegistry SavedChannels;
 
-        public const string NOTIS_PROTO = "http://beta.blog.astropenguin.net/";
-
         public IEnumerable<NotisChannel> Channels
         {
             get
@@ -36,6 +35,19 @@ namespace Net.Astropenguin.Notis
         public NotificationService()
         {
             SavedChannels = new XRegistry( "<channels />", "channels.xml" );
+            CreateChannelRenewalTrigger();
+        }
+
+        private void CreateChannelRenewalTrigger()
+        {
+            TimeTrigger OneDayTrigger = new TimeTrigger( 1440, false );
+            BackgroundTaskBuilder Builder = new BackgroundTaskBuilder();
+
+            Builder.Name = "ChannelRenewalTrigger";
+            Builder.TaskEntryPoint = "Tasks.ChannelRenewal";
+            Builder.SetTrigger( OneDayTrigger );
+
+            BackgroundTaskRegistration task = Builder.Register();
         }
 
         public void ShowNotification( string Title, string Message )
@@ -62,7 +74,7 @@ namespace Net.Astropenguin.Notis
 
         public void RequestRemove( string uuid )
         {
-            HttpRequest Request = new HttpRequest( new Uri( NOTIS_PROTO ) );
+            HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
 
@@ -78,18 +90,17 @@ namespace Net.Astropenguin.Notis
                 }
             };
 
-            Request.OpenWriteAsync( ServiceAuth.Auth + "&action=remove&id=" + uuid );
+            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "&action=remove&id=" + uuid );
         }
-
 
         public async void CreateChannelUri()
         {
             PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-            HttpRequest Request = new HttpRequest( new Uri( NOTIS_PROTO ) );
+            HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
             Request.OnRequestComplete += e => Request_OnRequestComplete( channel, e );
-            Request.OpenWriteAsync( ServiceAuth.Auth + "&action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
+            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "&action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
         }
 
         private void Request_OnRequestComplete( PushNotificationChannel Channel, DRequestCompletedEventArgs DArgs )
@@ -103,6 +114,7 @@ namespace Net.Astropenguin.Notis
                 {
                     XParameter Param = new XParameter( Res );
                     Param.SetValue( new XKey( "channel", 1 ) );
+                    Param.SetValue( new XKey( "uri", Channel.Uri ) );
                     SavedChannels.SetParameter( Param );
 
                     SavedChannels.Save();
