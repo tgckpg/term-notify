@@ -40,6 +40,11 @@ namespace Net.Astropenguin.Notis
 
         private void CreateChannelRenewalTrigger()
         {
+            foreach ( KeyValuePair<Guid, IBackgroundTaskRegistration> BTask in BackgroundTaskRegistration.AllTasks )
+            {
+                if ( BTask.Value.Name == "ChannelRenewalTrigger" ) return;
+            }
+
             TimeTrigger OneDayTrigger = new TimeTrigger( 1440, false );
             BackgroundTaskBuilder Builder = new BackgroundTaskBuilder();
 

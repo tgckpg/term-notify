@@ -83,7 +83,7 @@ namespace term_notify
         private async void ShowPrivacy( object sender, RoutedEventArgs e )
         {
             string title = "Of course we concern about privacy!";
-            string message = "No, I do not store your message. But every notification is sent via WNS ( Windows Push Notification Server ), they are hosted by Microsoft. So that part is none of my concern.";
+            string message = "No, I do not store your message. But every notification is sent via WNS ( Windows Push Notification Server ), and they are hosted by Microsoft. Let's trust them;)";
             await Popups.ShowDialog( new MessageDialog( message, title ) );
         }
 
