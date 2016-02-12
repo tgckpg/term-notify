@@ -95,7 +95,7 @@ namespace Net.Astropenguin.Notis
                 }
             };
 
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "&action=remove&id=" + uuid );
+            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=remove&id=" + uuid );
         }
 
         public async void CreateChannelUri()
@@ -105,7 +105,7 @@ namespace Net.Astropenguin.Notis
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
             Request.OnRequestComplete += e => Request_OnRequestComplete( channel, e );
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "&action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
+            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
         }
 
         private void Request_OnRequestComplete( PushNotificationChannel Channel, DRequestCompletedEventArgs DArgs )
@@ -124,12 +124,11 @@ namespace Net.Astropenguin.Notis
 
                     SavedChannels.Save();
                     NotifyChanged( "Channels" );
+                    return;
                 }
             }
-            catch ( Exception )
-            {
-                Channel.Close();
-            }
+            catch ( Exception ) { }
+            Channel.Close();
         }
     }
 }

@@ -89,7 +89,7 @@ namespace Tasks
                 TCS.SetResult( 1 );
             };
 
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "&action=register&id=" + uuid + "&uri=" + uri );
+            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=register&id=" + uuid + "&uri=" + uri );
 
             await TCS.Task;
         }
