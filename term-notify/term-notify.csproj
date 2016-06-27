@@ -110,6 +110,9 @@
     <Compile Include="Pages\Dialogs\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Dialogs\EditServiceProvider.xaml.cs">
+      <DependentUpon>EditServiceProvider.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +147,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Dialogs\EditServiceProvider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\libpenguin\Net.Astropenguin\Net.Astropenguin.csproj">
@@ -155,7 +162,6 @@
       <Name>Tasks</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\ChannelInfo\ChannelInfo.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -20,10 +20,13 @@ namespace Tasks
         XRegistry SavedChannels;
         XParameter CurrentTask;
 
+        ServiceProvider SProvider;
+
         public ChannelRenewal()
         {
             // Bootstrap
             XRegistry.AStorage = new AppStorage();
+            SProvider = new ServiceProvider();
 
             TaskLog = new XRegistry( "<tasklog />", "tasklog.xml" );
             SavedChannels = new XRegistry( "<channels />", "channels.xml" );
@@ -54,11 +57,10 @@ namespace Tasks
                 } );
 
                 PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-                HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
 
                 if ( channel.Uri != Param.GetValue( "uri" ) )
                 {
-                    await RenewChannel( Param.ID, Uri.EscapeDataString( channel.Uri ) );
+                    await RenewChannel( Param.GetValue( "provider" ), Param.ID, Uri.EscapeDataString( channel.Uri ) );
                 }
 
             }
@@ -66,11 +68,12 @@ namespace Tasks
             Deferral.Complete();
         }
 
-        private async Task RenewChannel( string uuid, string uri )
+        private async Task RenewChannel( string provider, string uuid, string uri )
         {
+            ServiceInfo Provider = SProvider.GetService( provider );
             TaskCompletionSource<int> TCS = new TaskCompletionSource<int>();
 
-            HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
+            HttpRequest Request = new HttpRequest( new Uri( Provider.Protocol ) );
             Request.EN_UITHREAD = false;
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
@@ -89,7 +92,7 @@ namespace Tasks
                 TCS.SetResult( 1 );
             };
 
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=register&id=" + uuid + "&uri=" + uri );
+            Request.OpenWriteAsync( Provider.Param + "action=register&id=" + uuid + "&uri=" + uri );
 
             await TCS.Task;
         }

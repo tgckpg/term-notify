@@ -3,12 +3,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:term_notify"
+    xmlns:c="using:Net.Astropenguin.UI"
     xmlns:i="using:Net.Astropenguin.UI.Icons"
+    xmlns:v="using:Net.Astropenguin.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.Resources>
+            <v:DataVisConverter x:Key="DataVisConverter" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -20,7 +25,6 @@
             </Grid.ColumnDefinitions>
             <StackPanel Margin="10">
                 <TextBlock Text="term-notify" FontSize="25" Style="{ThemeResource HeaderTextBlockStyle}"/>
-                <TextBlock Text="List of registered channels" Style="{StaticResource SubtitleTextBlockStyle}" />
             </StackPanel>
             <Button Grid.Column="1" Margin="5"
                     Padding="0">
@@ -28,35 +32,75 @@
                                 AutoScale="True" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="New channel" Click="NewChannel" />
+                        <MenuFlyoutItem Text="Add Service" Click="ChangeServiceProvider" />
                         <MenuFlyoutItem Text="Privacy" Click="ShowPrivacy" />
                         <MenuFlyoutItem Text="What is this app?" Click="ShowAbout" />
+                        <MenuFlyoutItem Text="Help" Click="Help" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
         </Grid>
-        <ListView x:Name="ChannelsView"
-                  Grid.Row="1" ItemsSource="{Binding Channels}"
-                  Margin="15">
-            <ListView.Resources>
-                <MenuFlyout x:Key="ChannelContext">
-                    <MenuFlyoutItem Text="Copy id" Click="CopyId" />
-                    <MenuFlyoutItem Text="Copy curl" Click="CopyCurl" />
-                    <MenuFlyoutItem Text="Copy wget" Click="CopyWget" />
-                    <MenuFlyoutItem Text="Remove" Click="RemoveChannel" />
-                </MenuFlyout>
-            </ListView.Resources>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5" RightTapped="ShowChannelContext" FlyoutBase.AttachedFlyout="{StaticResource ChannelContext}">
-                        <TextBlock Text="{Binding uuid}" Style="{StaticResource BodyTextBlockStyle}" />
-                        <TextBlock Text="{Binding CmdCurl}" Style="{StaticResource BodyTextBlockStyle}"
-                                   TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
-                        <TextBlock Text="{Binding CmdWget}" Style="{StaticResource BodyTextBlockStyle}"
-                                   TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Pivot Grid.Row="1" >
+            <PivotItem Header="Services">
+                <ListView x:Name="ServicelsView"
+                          ItemsSource="{Binding Services}"
+                          Margin="15">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <Border.Resources>
+                                    <MenuFlyout x:Key="ServiceContext">
+                                        <MenuFlyoutItem Text="New channel" Click="NewChannel" />
+                                        <MenuFlyoutItem Text="Edit" IsEnabled="{Binding CanEdit}" Click="EditService" />
+                                        <MenuFlyoutItem Text="Remove" IsEnabled="{Binding CanEdit}" Click="RemoveService" />
+                                    </MenuFlyout>
+                                </Border.Resources>
+                                <StackPanel Margin="5" RightTapped="ShowServiceContext" FlyoutBase.AttachedFlyout="{StaticResource ServiceContext}">
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource BodyTextBlockStyle}" />
+                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}"
+                                               TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                               Foreground="{ThemeResource SearchBoxDisabledTextThemeBrush}">
+                                        Uri: <Run Text="{Binding Protocol}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="Channels" >
+                <Grid>
+                    <TextBlock Visibility="{Binding Channels,Converter={StaticResource DataVisConverter}, ConverterParameter=1}"
+                               Text="Channel can be created under Service tab ( right-click )" />
+                    <ListView x:Name="ChannelsView"
+                              ItemsSource="{Binding Channels}"
+                              Margin="15">
+                        <ListView.Resources>
+                            <MenuFlyout x:Key="ChannelContext">
+                                <MenuFlyoutItem Text="Test" Click="TestMessage" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Text="Copy id" Click="CopyId" />
+                                <MenuFlyoutItem Text="Copy curl" Click="CopyCurl" />
+                                <MenuFlyoutItem Text="Copy wget" Click="CopyWget" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Text="Remove" Click="RemoveChannel" />
+                            </MenuFlyout>
+                        </ListView.Resources>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="5" RightTapped="ShowChannelContext" FlyoutBase.AttachedFlyout="{StaticResource ChannelContext}">
+                                    <TextBlock Text="{Binding uuid}" Style="{StaticResource BodyTextBlockStyle}" />
+                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}"
+                                               Foreground="{ThemeResource SearchBoxDisabledTextThemeBrush}"
+                                               TextTrimming="CharacterEllipsis" TextWrapping="NoWrap">
+                                        Service provider: <Run Text="{Binding ServiceName}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

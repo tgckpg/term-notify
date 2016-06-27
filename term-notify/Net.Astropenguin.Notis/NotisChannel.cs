@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Tasks;
+
 namespace Net.Astropenguin.Notis
 {
     class NotisChannel
@@ -14,12 +16,7 @@ namespace Net.Astropenguin.Notis
         {
             get
             {
-                return "curl " + Channel.Info.NOTIS_PROTO
-                    + string.Format(
-                        " --data \"id={0}&action=deliver&title={1}&message={2}\""
-                        , uuid, Uri.EscapeDataString( "Hello world" )
-                        , Uri.EscapeDataString( "Test notification message" )
-                    );
+                return "curl " + Provider.Protocol + " --data \"" + Helloworld + "\"";
             }
         }
 
@@ -27,18 +24,37 @@ namespace Net.Astropenguin.Notis
         {
             get
             {
-                return "wget -qO- " + Channel.Info.NOTIS_PROTO
-                    + string.Format(
-                        " --post-data=\"id={0}&action=deliver&title={1}&message={2}\""
-                        , uuid, Uri.EscapeDataString( "Hello world" )
-                        , Uri.EscapeDataString( "Test notification message" )
-                    );
+                return "wget -qO- " + Provider.Protocol + " --post-data=\"" + Helloworld + "\"";
             }
         }
 
-        public NotisChannel( string uuid )
+        public string Helloworld
+        {
+            get
+            {
+                return string.Format(
+                    "id={0}&action=deliver&title={1}&message={2}"
+                    , uuid, Uri.EscapeDataString( "Hello world" )
+                    , Uri.EscapeDataString( "Test notification message" )
+                );
+            }
+
+        }
+
+        public string ServiceName
+        {
+            get { return Provider.Name; }
+        }
+
+        public ServiceInfo Provider
+        {
+            get; private set;
+        }
+
+        public NotisChannel( string uuid, ServiceInfo provider )
         {
             this.uuid = uuid;
+            Provider = provider;
         }
     }
 }

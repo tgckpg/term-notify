@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 
 using Net.Astropenguin.Helpers;
 using Net.Astropenguin.Notis;
+using Tasks;
 
 namespace term_notify
 {
@@ -24,6 +25,7 @@ namespace term_notify
     {
         private NotificationService Service;
         private NotisChannel SelectedChannel;
+        private ServiceInfo SelectedService;
 
         public MainPage()
         {
@@ -51,9 +53,11 @@ namespace term_notify
             FlyoutBase.ShowAttachedFlyout( Panel );
         }
 
-        private void NewChannel( object sender, RoutedEventArgs e )
+        private void ShowServiceContext( object sender, RightTappedRoutedEventArgs e )
         {
-            Service.CreateChannelUri();
+            StackPanel Panel = sender as StackPanel;
+            SelectedService = Panel.DataContext as ServiceInfo;
+            FlyoutBase.ShowAttachedFlyout( Panel );
         }
 
         private void CopyId( object sender, RoutedEventArgs e )
@@ -83,22 +87,56 @@ namespace term_notify
             Clipboard.SetContent( Data );
         }
 
+        private void NewChannel( object sender, RoutedEventArgs e )
+        {
+            if ( SelectedService == null ) return;
+            Service.CreateChannelUri( SelectedService );
+        }
+
+        private void TestMessage( object sender, RoutedEventArgs e )
+        {
+            if ( SelectedChannel == null ) return;
+            Service.TestMessage( SelectedChannel );
+        }
+
         private void RemoveChannel( object sender, RoutedEventArgs e )
         {
             if ( SelectedChannel == null ) return;
             Service.Remove( SelectedChannel );
         }
 
+        private void EditService( object sender, RoutedEventArgs e )
+        {
+            if ( SelectedService == null ) return;
+            Service.Edit( SelectedService );
+        }
+
+        private void RemoveService( object sender, RoutedEventArgs e )
+        {
+            if ( SelectedService == null ) return;
+            Service.Remove( SelectedService );
+        }
+
+        private void Help( object sender, RoutedEventArgs e )
+        {
+            var j = Windows.System.Launcher.LaunchUriAsync( new Uri( "https://github.com/tgckpg/term-notify/wiki" ) );
+        }
+
         private async void ShowPrivacy( object sender, RoutedEventArgs e )
         {
-            string title = "Of course we concern about privacy!";
-            string message = "No, I do not store your message. But every notification is sent via WNS ( Windows Push Notification Server ), and they are hosted by Microsoft. Let's trust them;)";
+            string title = "Having a trust issue?";
+            string message = "Although I do not store your messages. You can create your own server by grabbing the service-side source code ( ~1000 lines of code ) at github under the help section..";
             await Popups.ShowDialog( new MessageDialog( message, title ) );
         }
 
         private async void ShowAbout( object sender, RoutedEventArgs e )
         {
             await Popups.ShowDialog( new Pages.Dialogs.About() );
+        }
+
+        private async void ChangeServiceProvider( object sender, RoutedEventArgs e )
+        {
+            await Popups.ShowDialog( new Pages.Dialogs.EditServiceProvider() );
         }
     }
 }

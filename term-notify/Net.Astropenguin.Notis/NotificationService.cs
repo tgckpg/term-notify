@@ -16,6 +16,8 @@ using Net.Astropenguin.Linq;
 using Net.Astropenguin.Loaders;
 using Net.Astropenguin.Logging;
 
+using Tasks;
+
 namespace Net.Astropenguin.Notis
 {
     class NotificationService : ActiveData
@@ -23,14 +25,26 @@ namespace Net.Astropenguin.Notis
         public static readonly string ID = typeof( NotificationService ).Name;
 
         private XRegistry SavedChannels;
+        private ServiceProvider SProvider = new ServiceProvider();
 
         public IEnumerable<NotisChannel> Channels
         {
             get
             {
-                return SavedChannels.GetParametersWithKey( "channel" ).Remap( x => new NotisChannel( x.ID ) );
+                return SavedChannels.GetParametersWithKey( "channel" ).Remap(
+                    x => new NotisChannel( x.ID, SProvider.GetService( x.GetValue( "provider" ) ) )
+                );
             }
         }
+
+        public IEnumerable<ServiceInfo> Services
+        {
+            get
+            {
+                return SProvider.GetServices();
+            }
+        }
+
 
         public NotificationService()
         {
@@ -74,12 +88,32 @@ namespace Net.Astropenguin.Notis
 
             NotifyChanged( "Channels" );
 
-            RequestRemove( Channel.uuid );
+            RequestRemove( Channel.Provider, Channel.uuid );
         }
 
-        public void RequestRemove( string uuid )
+        public void Remove( ServiceInfo Service )
         {
-            HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
+            SProvider.Remove( Service.Name );
+        }
+
+        internal void TestMessage( NotisChannel Channel )
+        {
+            HttpRequest Request = new HttpRequest( new Uri( Channel.Provider.Protocol ) );
+
+            Request.Method = "POST";
+            Request.ContentType = "application/x-www-form-urlencoded";
+
+            Request.OnRequestComplete += ( e ) =>
+            {
+            };
+
+            Request.OpenWriteAsync( Channel.Provider.Param + Channel.Helloworld );
+        }
+
+        private void RequestRemove( ServiceInfo Info, string uuid )
+        {
+            HttpRequest Request = new HttpRequest( new Uri( Info.Protocol ) );
+
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
 
@@ -95,20 +129,25 @@ namespace Net.Astropenguin.Notis
                 }
             };
 
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=remove&id=" + uuid );
+            Request.OpenWriteAsync( Info.Param + "action=remove&id=" + uuid );
         }
 
-        public async void CreateChannelUri()
+        internal void Edit( ServiceInfo selectedService )
+        {
+        }
+
+        public async void CreateChannelUri( ServiceInfo Info )
         {
             PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-            HttpRequest Request = new HttpRequest( new Uri( Channel.Info.NOTIS_PROTO ) );
+            HttpRequest Request = new HttpRequest( new Uri( Info.Protocol ) );
+
             Request.Method = "POST";
             Request.ContentType = "application/x-www-form-urlencoded";
-            Request.OnRequestComplete += e => Request_OnRequestComplete( channel, e );
-            Request.OpenWriteAsync( Channel.Info.SERVICE_AUTH + "action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
+            Request.OnRequestComplete += e => Request_OnRequestComplete( Info, channel, e );
+            Request.OpenWriteAsync( Info.Param + "action=register&uri=" + Uri.EscapeDataString( channel.Uri ) );
         }
 
-        private void Request_OnRequestComplete( PushNotificationChannel Channel, DRequestCompletedEventArgs DArgs )
+        private void Request_OnRequestComplete( ServiceInfo Info, PushNotificationChannel Channel, DRequestCompletedEventArgs DArgs )
         {
             try
             {
@@ -118,8 +157,13 @@ namespace Net.Astropenguin.Notis
                 if ( m.Success )
                 {
                     XParameter Param = new XParameter( Res );
-                    Param.SetValue( new XKey( "channel", 1 ) );
-                    Param.SetValue( new XKey( "uri", Channel.Uri ) );
+                    Param.SetValue(
+                        new XKey[] {
+                            new XKey( "provider", Info.Name )
+                            , new XKey( "channel", 1 )
+                            , new XKey( "uri", Channel.Uri )
+                        } );
+
                     SavedChannels.SetParameter( Param );
 
                     SavedChannels.Save();

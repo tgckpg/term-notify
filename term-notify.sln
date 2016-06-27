@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "term-notify", "term-notify\term-notify.csproj", "{915EA4F8-2CF1-4CF6-B722-6386401898DA}"
 EndProject
@@ -13,7 +13,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ChannelInfo", "ChannelInfo\
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ChannelInfo\ChannelInfo.projitems*{915ea4f8-2cf1-4cf6-b722-6386401898da}*SharedItemsImports = 4
+		lib\libpenguin\Global\Global.projitems*{5a6b4589-8c63-40d5-946f-759a9282a176}*SharedItemsImports = 4
 		ChannelInfo\ChannelInfo.projitems*{9b0724bf-1ba6-4004-a3f6-a67f645f15b1}*SharedItemsImports = 4
 		ChannelInfo\ChannelInfo.projitems*{d3c06b78-2226-46c9-a18c-b8611019e62b}*SharedItemsImports = 13
 	EndGlobalSection
