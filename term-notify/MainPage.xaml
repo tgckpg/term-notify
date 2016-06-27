@@ -40,6 +40,7 @@
                   Margin="15">
             <ListView.Resources>
                 <MenuFlyout x:Key="ChannelContext">
+                    <MenuFlyoutItem Text="Copy id" Click="CopyId" />
                     <MenuFlyoutItem Text="Copy curl" Click="CopyCurl" />
                     <MenuFlyoutItem Text="Copy wget" Click="CopyWget" />
                     <MenuFlyoutItem Text="Remove" Click="RemoveChannel" />

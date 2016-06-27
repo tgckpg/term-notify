@@ -56,6 +56,15 @@ namespace term_notify
             Service.CreateChannelUri();
         }
 
+        private void CopyId( object sender, RoutedEventArgs e )
+        {
+            if ( SelectedChannel == null ) return;
+            DataPackage Data = new DataPackage();
+
+            Data.SetText( SelectedChannel.uuid );
+            Clipboard.SetContent( Data );
+        }
+
         private void CopyCurl( object sender, RoutedEventArgs e )
         {
             if ( SelectedChannel == null ) return;
