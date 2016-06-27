@@ -108,7 +108,7 @@ namespace term_notify
         private void EditService( object sender, RoutedEventArgs e )
         {
             if ( SelectedService == null ) return;
-            Service.Edit( SelectedService );
+            Service.AddService( SelectedService.Name, SelectedService.Protocol, SelectedService.Param );
         }
 
         private void RemoveService( object sender, RoutedEventArgs e )
@@ -136,7 +136,12 @@ namespace term_notify
 
         private async void ChangeServiceProvider( object sender, RoutedEventArgs e )
         {
-            await Popups.ShowDialog( new Pages.Dialogs.EditServiceProvider() );
+            Pages.Dialogs.EditServiceProvider ESProvider = new Pages.Dialogs.EditServiceProvider( SelectedService );
+            await Popups.ShowDialog( ESProvider );
+
+            if ( ESProvider.Canceled ) return;
+
+            Service.AddService( ESProvider.NameEx, ESProvider.ServiceEx, ESProvider.ParamEx );
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Tasks
             Settings = new XRegistry( "<services />", "services.xml" );
         }
 
-        public void SetServiceUri( string Name, string Proto, string Auth )
+        public void SetService( string Name, string Proto, string Auth )
         {
             XParameter Param = new XParameter( Name );
             Param.SetXValue( new XKey[]
@@ -42,6 +42,12 @@ namespace Tasks
             } );
 
             Settings.SetParameter( Param );
+            Settings.Save();
+        }
+
+        public void RemoveService( string name )
+        {
+            Settings.RemoveParameter( name );
             Settings.Save();
         }
 
@@ -69,12 +75,6 @@ namespace Tasks
 
             Services.Add( DefaultService );
             return Services;
-        }
-
-        public void Remove( string name )
-        {
-            Settings.RemoveParameter( name );
-            Settings.Save();
         }
     }
 }

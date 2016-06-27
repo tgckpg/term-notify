@@ -9,17 +9,16 @@
     Title="Change Service Uri"
     PrimaryButtonText="OK"
     SecondaryButtonText="Cancel"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick" >
 
     <Grid>
         <StackPanel>
             <TextBlock Text="Name" />
-            <TextBox PlaceholderText="" Margin="0,0,0,10" />
+            <TextBox x:Name="NameInput" PlaceholderText="" Margin="0,0,0,10" />
             <TextBlock Text="Uri" />
-            <TextBox PlaceholderText="Default" Margin="0,0,0,10" />
+            <TextBox x:Name="UriInput" PlaceholderText="Default" Margin="0,0,0,10" />
             <TextBlock Text="Additional Parameters" />
-            <TextBox PlaceholderText="None" />
+            <TextBox x:Name="ParamInput" PlaceholderText="None" />
         </StackPanel>
     </Grid>
 </ContentDialog>

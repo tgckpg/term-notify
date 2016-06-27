@@ -93,7 +93,7 @@ namespace Net.Astropenguin.Notis
 
         public void Remove( ServiceInfo Service )
         {
-            SProvider.Remove( Service.Name );
+            SProvider.RemoveService( Service.Name );
         }
 
         internal void TestMessage( NotisChannel Channel )
@@ -132,8 +132,9 @@ namespace Net.Astropenguin.Notis
             Request.OpenWriteAsync( Info.Param + "action=remove&id=" + uuid );
         }
 
-        internal void Edit( ServiceInfo selectedService )
+        internal void AddService( string nameEx, string serviceEx, string paramEx )
         {
+            SProvider.SetService( nameEx, serviceEx, paramEx );
         }
 
         public async void CreateChannelUri( ServiceInfo Info )
