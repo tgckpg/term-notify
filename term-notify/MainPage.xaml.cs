@@ -105,14 +105,17 @@ namespace term_notify
             Service.Remove( SelectedChannel );
         }
 
-        private async void EditService( object sender, RoutedEventArgs e )
+        private void NewService( object sender, RoutedEventArgs e ) { EditService( true ); }
+        private void EditService( object sender, RoutedEventArgs e ) { EditService( false ); }
+
+        private async void EditService( bool New )
         {
             if ( !( SelectedService == null || SelectedService.CanEdit ) )
             {
                 SelectedService = null;
             }
 
-            Pages.Dialogs.EditServiceProvider ESProvider = new Pages.Dialogs.EditServiceProvider( SelectedService );
+            Pages.Dialogs.EditServiceProvider ESProvider = new Pages.Dialogs.EditServiceProvider( SelectedService, New );
             await Popups.ShowDialog( ESProvider );
 
             if ( ESProvider.Canceled ) return;

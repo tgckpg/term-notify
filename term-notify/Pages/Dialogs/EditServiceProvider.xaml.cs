@@ -43,16 +43,13 @@ namespace term_notify.Pages.Dialogs
         public EditServiceProvider( ServiceInfo Info, bool New = false )
             :this()
         {
+            if( New ) Title = "Add Service Provider";
+
             if ( Info == null ) return;
 
             NameInput.Text = Info.Name;
             UriInput.Text = Info.Protocol;
             ParamInput.Text = Info.Param;
-
-            if( New )
-            {
-                Title = "Add Service Provider";
-            }
         }
 
         private void ContentDialog_PrimaryButtonClick( ContentDialog sender, ContentDialogButtonClickEventArgs args )

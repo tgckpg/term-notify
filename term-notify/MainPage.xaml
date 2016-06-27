@@ -28,7 +28,7 @@
                             AutoScale="True" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
             <Button.Flyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Text="Add Service" Click="EditService" />
+                    <MenuFlyoutItem Text="Add Service" Click="NewService" />
                     <MenuFlyoutItem Text="Privacy" Click="ShowPrivacy" />
                     <MenuFlyoutItem Text="What is this app?" Click="ShowAbout" />
                     <MenuFlyoutItem Text="Help" Click="Help" />
