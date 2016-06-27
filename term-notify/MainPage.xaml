@@ -18,28 +18,23 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Margin="10">
-                <TextBlock Text="term-notify" FontSize="25" Style="{ThemeResource HeaderTextBlockStyle}"/>
-            </StackPanel>
-            <Button Grid.Column="1" Margin="5"
-                    Padding="0">
-                <i:IconSettings Width="60" Height="60"
-                                AutoScale="True" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
-                <Button.Flyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Add Service" Click="ChangeServiceProvider" />
-                        <MenuFlyoutItem Text="Privacy" Click="ShowPrivacy" />
-                        <MenuFlyoutItem Text="What is this app?" Click="ShowAbout" />
-                        <MenuFlyoutItem Text="Help" Click="Help" />
-                    </MenuFlyout>
-                </Button.Flyout>
-            </Button>
-        </Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="term-notify" FontSize="25" Style="{ThemeResource HeaderTextBlockStyle}"/>
+        </StackPanel>
+        <Button Grid.RowSpan="2" Margin="10"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Padding="0">
+            <i:IconSettings Width="60" Height="60"
+                            AutoScale="True" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
+            <Button.Flyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Add Service" Click="EditService" />
+                    <MenuFlyoutItem Text="Privacy" Click="ShowPrivacy" />
+                    <MenuFlyoutItem Text="What is this app?" Click="ShowAbout" />
+                    <MenuFlyoutItem Text="Help" Click="Help" />
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
         <Pivot Grid.Row="1" >
             <PivotItem Header="Services">
                 <ListView x:Name="ServicelsView"

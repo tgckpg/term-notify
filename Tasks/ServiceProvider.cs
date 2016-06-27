@@ -66,11 +66,16 @@ namespace Tasks
         {
             List<ServiceInfo> Services = new List<ServiceInfo>();
 
-            XParameter[] Params = Settings.GetParametersWithKey( "service" );
+            XParameter[] Params = Settings.GetParametersWithKey( "proto" );
 
             foreach( XParameter P in Params )
             {
-                Services.Add( new ServiceInfo() { Name = P.ID, Protocol = P.GetValue( "proto" ), Param = P.GetValue( "auth" ) } );
+                Services.Add( new ServiceInfo() {
+                    Name = P.ID
+                    , Protocol = P.GetValue( "proto" )
+                    , Param = P.GetValue( "auth" )
+                    , CanEdit = true
+                } );
             }
 
             Services.Add( DefaultService );

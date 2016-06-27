@@ -105,16 +105,41 @@ namespace term_notify
             Service.Remove( SelectedChannel );
         }
 
-        private void EditService( object sender, RoutedEventArgs e )
+        private async void EditService( object sender, RoutedEventArgs e )
         {
-            if ( SelectedService == null ) return;
-            Service.AddService( SelectedService.Name, SelectedService.Protocol, SelectedService.Param );
+            if ( !( SelectedService == null || SelectedService.CanEdit ) )
+            {
+                SelectedService = null;
+            }
+
+            Pages.Dialogs.EditServiceProvider ESProvider = new Pages.Dialogs.EditServiceProvider( SelectedService );
+            await Popups.ShowDialog( ESProvider );
+
+            if ( ESProvider.Canceled ) return;
+
+            Service.AddService( ESProvider.NameEx, ESProvider.ServiceEx, ESProvider.ParamEx );
         }
 
-        private void RemoveService( object sender, RoutedEventArgs e )
+        private async void RemoveService( object sender, RoutedEventArgs e )
         {
             if ( SelectedService == null ) return;
-            Service.Remove( SelectedService );
+
+            bool Confirmed = true;
+
+            if ( Service.HasChannel( SelectedService.Name ) )
+            {
+                Confirmed = false;
+
+                MessageDialog MsgBox = new MessageDialog(
+                    "All associated channels by this services will also be removed. Continue?"
+                    , "Remove \"" + SelectedService.Name + "\"" );
+                MsgBox.Commands.Add( new UICommand( "Yes", ( x ) => { Confirmed = true; } ) );
+                MsgBox.Commands.Add( new UICommand( "No" ) );
+
+                await Popups.ShowDialog( MsgBox );
+            }
+
+            if ( Confirmed ) Service.Remove( SelectedService );
         }
 
         private void Help( object sender, RoutedEventArgs e )
@@ -132,16 +157,6 @@ namespace term_notify
         private async void ShowAbout( object sender, RoutedEventArgs e )
         {
             await Popups.ShowDialog( new Pages.Dialogs.About() );
-        }
-
-        private async void ChangeServiceProvider( object sender, RoutedEventArgs e )
-        {
-            Pages.Dialogs.EditServiceProvider ESProvider = new Pages.Dialogs.EditServiceProvider( SelectedService );
-            await Popups.ShowDialog( ESProvider );
-
-            if ( ESProvider.Canceled ) return;
-
-            Service.AddService( ESProvider.NameEx, ESProvider.ServiceEx, ESProvider.ParamEx );
         }
     }
 }

@@ -40,7 +40,7 @@ namespace term_notify.Pages.Dialogs
             Canceled = true;
         }
 
-        public EditServiceProvider( ServiceInfo Info )
+        public EditServiceProvider( ServiceInfo Info, bool New = false )
             :this()
         {
             if ( Info == null ) return;
@@ -48,6 +48,11 @@ namespace term_notify.Pages.Dialogs
             NameInput.Text = Info.Name;
             UriInput.Text = Info.Protocol;
             ParamInput.Text = Info.Param;
+
+            if( New )
+            {
+                Title = "Add Service Provider";
+            }
         }
 
         private void ContentDialog_PrimaryButtonClick( ContentDialog sender, ContentDialogButtonClickEventArgs args )

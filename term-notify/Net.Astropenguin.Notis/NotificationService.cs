@@ -87,13 +87,16 @@ namespace Net.Astropenguin.Notis
             SavedChannels.Save();
 
             NotifyChanged( "Channels" );
-
             RequestRemove( Channel.Provider, Channel.uuid );
         }
 
         public void Remove( ServiceInfo Service )
         {
+            NotisChannel[] RmChannels = Channels.Where( x => x.Provider.Name == Service.Name ).ToArray();
+            foreach( NotisChannel RmChannel in RmChannels ) Remove( RmChannel );
+
             SProvider.RemoveService( Service.Name );
+            NotifyChanged( "Services" );
         }
 
         internal void TestMessage( NotisChannel Channel )
@@ -132,9 +135,15 @@ namespace Net.Astropenguin.Notis
             Request.OpenWriteAsync( Info.Param + "action=remove&id=" + uuid );
         }
 
+        internal bool HasChannel( string ServiceName )
+        {
+            return SavedChannels.GetParametersWithKey( "channel" ).Any( x => x.GetValue( "provider" ) == ServiceName );
+        }
+
         internal void AddService( string nameEx, string serviceEx, string paramEx )
         {
             SProvider.SetService( nameEx, serviceEx, paramEx );
+            NotifyChanged( "Services" );
         }
 
         public async void CreateChannelUri( ServiceInfo Info )
