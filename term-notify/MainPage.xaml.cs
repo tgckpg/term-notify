@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Navigation;
 using Net.Astropenguin.Helpers;
 using Net.Astropenguin.Notis;
 using Tasks;
+using Windows.ApplicationModel.Background;
+using System.Threading.Tasks;
 
 namespace term_notify
 {
@@ -40,10 +42,29 @@ namespace term_notify
             Net.Astropenguin.IO.XRegistry.AStorage = new Net.Astropenguin.IO.AppStorage();
         }
 
-        private void SetTemplate()
+        private async void SetTemplate()
         {
+            await AcquireBackgroundPriviledge();
+
             Service = new NotificationService();
             LayoutRoot.DataContext = Service;
+        }
+
+        private async Task AcquireBackgroundPriviledge()
+        {
+            BackgroundAccessStatus Status = await BackgroundExecutionManager.RequestAccessAsync();
+            switch( Status )
+            {
+                case BackgroundAccessStatus.Denied:
+                    // Windows: Background activity and updates for this app are disabled by the user.
+                    // Windows Phone: The maximum number of background apps allowed across the system has been reached or
+                    // background activity and updates for this app are disabled by the user.
+                    var j = Popups.ShowDialog( new MessageDialog(
+                        "Background access is denied"
+                        , "Automatic channel renewal is impossible if background task is disabled." )
+                    );
+                    return;
+            }
         }
 
         private void ShowChannelContext( object sender, RightTappedRoutedEventArgs e )

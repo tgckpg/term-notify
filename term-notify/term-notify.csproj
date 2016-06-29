@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>term-notify_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>359B92C20CEEC90A4F51E349161069A8A2DEAA4A</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>D07F96F02C27C5BE77A6C6603420AD5182669E03</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
@@ -98,7 +98,6 @@
     </Content>
     <None Include="project.json" />
     <None Include="term-notify_StoreKey.pfx" />
-    <None Include="term-notify_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">

@@ -59,7 +59,11 @@ namespace Net.Astropenguin.Notis
                 if ( BTask.Value.Name == "ChannelRenewalTrigger" ) return;
             }
 
-            TimeTrigger OneDayTrigger = new TimeTrigger( 1440, false );
+#if DEBUG
+            TimeTrigger OneDayTrigger = new TimeTrigger( 15, false );
+#else
+            TimeTrigger OneDayTrigger = new TimeTrigger( 60, false );
+#endif
             BackgroundTaskBuilder Builder = new BackgroundTaskBuilder();
 
             Builder.Name = "ChannelRenewalTrigger";
