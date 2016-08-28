@@ -53,10 +53,10 @@ namespace Tasks
 
         public ServiceInfo GetService( string Name )
         {
-            XParameter Param = Settings.GetParameter( Name );
+            XParameter Param = Settings.Parameter( Name );
             if ( Param != null )
             {
-                return new ServiceInfo() { Name = Param.ID, Protocol = Param.GetValue( "proto" ), Param = Param.GetValue( "auth" ) };
+                return new ServiceInfo() { Name = Param.Id, Protocol = Param.GetValue( "proto" ), Param = Param.GetValue( "auth" ) };
             }
 
             return DefaultService;
@@ -66,12 +66,12 @@ namespace Tasks
         {
             List<ServiceInfo> Services = new List<ServiceInfo>();
 
-            XParameter[] Params = Settings.GetParametersWithKey( "proto" );
+            XParameter[] Params = Settings.Parameters( "proto" );
 
             foreach( XParameter P in Params )
             {
                 Services.Add( new ServiceInfo() {
-                    Name = P.ID
+                    Name = P.Id
                     , Protocol = P.GetValue( "proto" )
                     , Param = P.GetValue( "auth" )
                     , CanEdit = true

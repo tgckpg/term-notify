@@ -36,7 +36,7 @@ namespace Tasks
         {
             Deferral = taskInstance.GetDeferral();
 
-            XParameter[] Params = SavedChannels.GetParametersWithKey( "channel" );
+            XParameter[] Params = SavedChannels.Parameters( "channel" );
 
             if ( Params.Length == 0 )
             {
@@ -60,7 +60,7 @@ namespace Tasks
 
                 if ( channel.Uri != Param.GetValue( "uri" ) )
                 {
-                    await RenewChannel( Param.GetValue( "provider" ), Param.ID, Uri.EscapeDataString( channel.Uri ) );
+                    await RenewChannel( Param.GetValue( "provider" ), Param.Id, Uri.EscapeDataString( channel.Uri ) );
                 }
 
             }

@@ -31,8 +31,8 @@ namespace Net.Astropenguin.Notis
         {
             get
             {
-                return SavedChannels.GetParametersWithKey( "channel" ).Remap(
-                    x => new NotisChannel( x.ID, SProvider.GetService( x.GetValue( "provider" ) ) )
+                return SavedChannels.Parameters( "channel" ).Remap(
+                    x => new NotisChannel( x.Id, SProvider.GetService( x.GetValue( "provider" ) ) )
                 );
             }
         }
@@ -141,7 +141,7 @@ namespace Net.Astropenguin.Notis
 
         internal bool HasChannel( string ServiceName )
         {
-            return SavedChannels.GetParametersWithKey( "channel" ).Any( x => x.GetValue( "provider" ) == ServiceName );
+            return SavedChannels.Parameters( "channel" ).Any( x => x.GetValue( "provider" ) == ServiceName );
         }
 
         internal void AddService( string nameEx, string serviceEx, string paramEx )
